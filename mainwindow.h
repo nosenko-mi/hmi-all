@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +18,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void handleButtonClick();
+    void handleClearButtonClick();
+    // void changePrecision(int decimals);
+
 private:
     Ui::MainWindow *ui;
+
 };
 #endif // MAINWINDOW_H
