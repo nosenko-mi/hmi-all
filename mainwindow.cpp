@@ -23,17 +23,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::handleButtonClick(){
     // handle input
-    double input = ui->doubleSpinBox->value();
+    double input = ui->leftSpinBox->value();
     // calculate
     double y = -1.0;
     if (ui->f1RadioButton->isChecked()){
         y = MathUtils::calulateF1(input);
-        QString value = QString::number(y);
-        ui->f1ResultLabel->setText(value);
     } else {
         y = MathUtils::calulateF2(input);
-        QString value = QString::number(y);
-        ui->f2ResultLabel->setText(value);
     }
     // show result
     char messageBuffer [128];
@@ -44,8 +40,5 @@ void MainWindow::handleButtonClick(){
 
 void MainWindow::handleClearButtonClick(){
 
-    ui->doubleSpinBox->clear();
-    ui->f1ResultLabel->clear();
-    ui->f2ResultLabel->clear();
-
+    ui->leftSpinBox->clear();
 }
