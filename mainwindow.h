@@ -25,6 +25,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    void showMessageBox(QString message);
+    bool isInputCorrect();
 
 };
 #endif // MAINWINDOW_H
