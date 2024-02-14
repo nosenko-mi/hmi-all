@@ -12,12 +12,14 @@ SOURCES += \
     inpututils.cpp \
     main.cpp \
     mainwindow.cpp \
-    mathutils.cpp
+    mathutils.cpp \
+    renderarea.cpp
 
 HEADERS += \
     inpututils.h \
     mainwindow.h \
-    mathutils.h
+    mathutils.h \
+    renderarea.h
 
 FORMS += \
     mainwindow.ui
