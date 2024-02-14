@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "RenderArea.h"
+
 #include <QMainWindow>
 #include <qpushbutton.h>
 
@@ -24,9 +26,12 @@ private slots:
     // void changePrecision(int decimals);
 
 private:
+    RenderArea *renderArea;
+
     Ui::MainWindow *ui;
     void showMessageBox(QString message);
     bool isInputCorrect();
+    // void paintEvent(QPaintEvent *);
 
 };
 #endif // MAINWINDOW_H

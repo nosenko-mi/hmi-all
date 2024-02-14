@@ -1,8 +1,10 @@
 #include "mainwindow.h"
+#include "renderarea.h"
 #include "ui_mainwindow.h"
 
 #include <MathUtils.h>
 #include <QMessageBox>
+#include <QPainter>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,6 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    renderArea = new RenderArea(parent);
+    ui->plotWidget->setLayout(new QVBoxLayout);
+    ui->plotWidget->layout()->addWidget(renderArea);
+
+    ui->penStyleComboBox->addItem(tr("Solid"), static_cast<int>(Qt::SolidLine));
+    ui->penStyleComboBox->addItem(tr("Dash"), static_cast<int>(Qt::DashLine));
+    ui->penStyleComboBox->addItem(tr("Dot"), static_cast<int>(Qt::DotLine));
     // Connect button signal to appropriate slot
     connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleButtonClick);
     connect(ui->clearButton, &QPushButton::released, this, &MainWindow::handleClearButtonClick);
@@ -22,7 +31,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::handleButtonClick(){
     // clear previous result
-    ui->resultTable->clear();
 
     // handle input
     if (!isInputCorrect()){
@@ -40,16 +48,22 @@ void MainWindow::handleButtonClick(){
         result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF2);
     }
 
-    // show result
-    ui->resultTable->setRowCount(2);
-    ui->resultTable->setColumnCount(result.size());
+    std::map<double,double> mapYT = {
+        {0, 0},
+        {256, 256}
+    };
 
-    int i = 0;
-    for (const auto& [point, value] : result){
-        ui->resultTable->setItem(0, i, new QTableWidgetItem(QString::number(point)));
-        ui->resultTable->setItem(1, i, new QTableWidgetItem(QString::number(value)));
-        i++;
-    }
+    renderArea->setCoordinates(mapYT);
+
+    // ui->tableWidget->clear();
+    // ui->tableWidget->setRowCount(2);
+    // ui->tableWidget->setColumnCount(result.size());
+    // int i = 0;
+    // for (const auto& [point, value] : result){
+    //     ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
+    //     ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
+    //     i++;
+    // }
 
 }
 
@@ -58,11 +72,10 @@ void MainWindow::handleClearButtonClick(){
     ui->leftSpinBox->clear();
     ui->rightSpinBox->clear();
 
-    ui->resultTable->clear();
-    ui->resultTable->setColumnCount(0);
-    ui->resultTable->setRowCount(0);
+    // ui->resultTable->clear();
+    // ui->resultTable->setColumnCount(0);
+    // ui->resultTable->setRowCount(0);
 }
-
 
 void MainWindow::showMessageBox(QString message){
 
