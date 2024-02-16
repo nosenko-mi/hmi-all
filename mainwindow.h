@@ -23,12 +23,17 @@ public:
 private slots:
     void handleButtonClick();
     void handleClearButtonClick();
+    void handleStyleChange(int index);
+    void handleColorChange(int index);
+    void handleWidthChange(int value);
+    void penChanged();
     // void changePrecision(int decimals);
 
 private:
     RenderArea *renderArea;
 
     Ui::MainWindow *ui;
+    void init();
     void showMessageBox(QString message);
     bool isInputCorrect();
     // void paintEvent(QPaintEvent *);

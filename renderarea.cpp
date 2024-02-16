@@ -1,30 +1,57 @@
 #include "renderarea.h"
 
 
-RenderArea::RenderArea(QWidget *parent)
-    : QWidget(parent)
+
+
+RenderArea::RenderArea()
 {
     this->resize(256, 256);
+
+    this->pen.setWidth(2);
+    this->pen.setBrush(QBrush("red"));
 }
 
 void RenderArea::setCoordinates(std::map<double,double> coordinates){
-    this->coordinates = coordinates;
-    this->update();
-}
 
-void RenderArea::paintEvent(QPaintEvent *)
-{
-    std::cout<<"draw";
-    QPainter painter = QPainter(this);
-    std::vector<QPoint> points;
-    for (const auto&[x, y] : coordinates){
-        points.push_back(QPoint(x, y));
+    std::vector<QLineSeries*> serieses;
+    QLineSeries* series = new QLineSeries;
+    try {
+        for (const auto&[x, y] : coordinates){
+            if (std::isnan(x)|| std::isnan(y) || std::isinf(x) || std::isinf(y)){
+                if (series->points().size() < 1) continue;
+                serieses.push_back(series);
+                // qDebug() << series->points().length();
+                series = new QLineSeries;
+                continue;
+            }
+            series->append(x, y);
+        }
+        serieses.push_back(series);
+    } catch (const std::exception& e) {
+        QTextStream cerr(stderr);
+        cerr << e.what();
     }
 
-    painter.setPen(palette().dark().color());
-    for (int i = 1; i < points.size(); i++){
-        painter.drawLine(points[i-1], points[i]);
+    this->chart = new QChart();
+    QScatterSeries* scatter = new QScatterSeries();
+    for (QLineSeries* s : serieses){
+        if (s->points().length() == 1){
+            scatter->append(s->at(0));
+            continue;
+        } else if (s->points().length() > 1){
+            this->chart->addSeries(s);
+        }
+
     }
+    this->chart->addSeries(scatter);
+
+    series->setPen(this->pen);
+    scatter->setPen(this->pen);
+
+    this->chart->legend()->hide();
+    this->chart->createDefaultAxes();
+    this->setRenderHint(QPainter::Antialiasing);
+    this->setChart(chart);
 }
 
 QSize RenderArea::sizeHint() const
@@ -41,4 +68,21 @@ void RenderArea::setPen(const QPen &pen)
 {
     this->pen = pen;
     update();
+}
+
+void RenderArea::setPenStyle(const Qt::PenStyle style)
+{
+    this->pen.setStyle(style);
+    update();
+}
+
+void RenderArea::setPenColor(const QColor color)
+{
+    this->pen.setColor(color);
+    update();
+}
+
+void RenderArea::setPenSize(int width)
+{
+    this->pen.setWidth(width);
 }

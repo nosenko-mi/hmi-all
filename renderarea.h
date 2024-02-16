@@ -6,13 +6,18 @@
 #include <QPainterPath>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QLineSeries>
+#include <QChart>
+#include <QChartView>
+#include <QScatterSeries>
+#include<QDebug>
 
-class RenderArea : public QWidget
+class RenderArea : public QChartView
 {
     Q_OBJECT
 
 public:
-    explicit RenderArea(QWidget *parent = nullptr);
+    // explicit RenderArea(QWidget *parent = nullptr);
     RenderArea();
 
     QSize minimumSizeHint() const override;
@@ -22,16 +27,14 @@ public:
 
 public slots:
     void setPen(const QPen &pen);
-    // void setPenColor(const QPen &pen);
-    // void setPenStyle(const QPen &pen);
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
+    void setPenColor(const QColor color);
+    void setPenStyle(const Qt::PenStyle style);
+    void setPenSize(int width);
 
 private:
+    QChart* chart;
+    QLineSeries* series ;
     QPen pen;
-    QPixmap pixmap;
-    std::map<double, double> coordinates;
 };
 
 #endif // RENDERAREA_H

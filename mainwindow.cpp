@@ -1,3 +1,4 @@
+#include "chartwidget.h"
 #include "mainwindow.h"
 #include "renderarea.h"
 #include "ui_mainwindow.h"
@@ -6,22 +7,44 @@
 #include <QMessageBox>
 #include <QPainter>
 
-
+const int IdRole = Qt::UserRole;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    renderArea = new RenderArea(parent);
+    init();
+    // ui->plotWidget->layout()->addWidget(renderArea);
+
+    // ChartWidget* chartWidget = new ChartWidget();
+    // ui->plotWidget->layout()->addWidget(chartWidget);
+
+
+}
+
+void MainWindow::init(){
+
+    renderArea = new RenderArea();
     ui->plotWidget->setLayout(new QVBoxLayout);
     ui->plotWidget->layout()->addWidget(renderArea);
 
     ui->penStyleComboBox->addItem(tr("Solid"), static_cast<int>(Qt::SolidLine));
     ui->penStyleComboBox->addItem(tr("Dash"), static_cast<int>(Qt::DashLine));
-    ui->penStyleComboBox->addItem(tr("Dot"), static_cast<int>(Qt::DotLine));
+    ui->penStyleComboBox->addItem(tr("Dot"),  static_cast<int>(Qt::DotLine));
+
+    ui->penColorComboBox->addItem(tr("Red"), QColor("red"));
+    ui->penColorComboBox->addItem(tr("Green"), QColor("green"));
+    ui->penColorComboBox->addItem(tr("Blue"), QColor("blue"));
+
     // Connect button signal to appropriate slot
     connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleButtonClick);
     connect(ui->clearButton, &QPushButton::released, this, &MainWindow::handleClearButtonClick);
+    // connect(ui->penStyleComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::handleStyleChange);
+    // connect(ui->penColorComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::handleColorChange);
+    // connect(ui->penWidthSpinBox, &QSpinBox::valueChanged, this, &MainWindow::handleWidthChange);
+    connect(ui->penWidthSpinBox, &QSpinBox::valueChanged, this, &MainWindow::penChanged);
+    connect(ui->penStyleComboBox, &QComboBox::activated, this, &MainWindow::penChanged);
+    connect(ui->penColorComboBox, &QComboBox::activated, this, &MainWindow::penChanged);
 }
 
 MainWindow::~MainWindow()
@@ -48,24 +71,52 @@ void MainWindow::handleButtonClick(){
         result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF2);
     }
 
-    std::map<double,double> mapYT = {
-        {0, 0},
-        {256, 256}
-    };
+    renderArea->setCoordinates(result);
 
-    renderArea->setCoordinates(mapYT);
 
-    // ui->tableWidget->clear();
-    // ui->tableWidget->setRowCount(2);
-    // ui->tableWidget->setColumnCount(result.size());
-    // int i = 0;
-    // for (const auto& [point, value] : result){
-    //     ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
-    //     ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
-    //     i++;
-    // }
+    ui->tableWidget->clear();
+    ui->tableWidget->setRowCount(2);
+    ui->tableWidget->setColumnCount(result.size());
+    int i = 0;
+    for (const auto& [point, value] : result){
+        ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
+        ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
+        i++;
+    }
 
 }
+
+void MainWindow::penChanged()
+{
+    int width = ui->penWidthSpinBox->value();
+    Qt::PenStyle style = Qt::PenStyle(ui->penStyleComboBox->itemData(ui->penStyleComboBox->currentIndex(), IdRole).toInt());
+    // QColor color = QColor(ui->penColorComboBox->itemData(ui->penColorComboBox->currentIndex(), IdRole).toInt());
+    QColor color = ui->penColorComboBox->itemData(ui->penColorComboBox->currentIndex()).value<QColor>();
+    renderArea->setPen(QPen(color, width, style));
+}
+
+void MainWindow::handleStyleChange(int index){
+    if (index != -1) { // Check if an item is selected
+        int penStyleValue = ui->penStyleComboBox->itemData(index, Qt::UserRole + 1).toInt();
+        Qt::PenStyle style = static_cast<Qt::PenStyle>(penStyleValue);
+        renderArea->setPenStyle(style);
+    } else {
+    }
+
+};
+void MainWindow::handleColorChange(int index){
+    int selectedIndex = ui->penColorComboBox->currentIndex();
+    if (selectedIndex != -1) {
+        QColor color = ui->penColorComboBox->itemData(index).value<QColor>();
+        renderArea->setPenColor(color);
+    } else {
+    }
+
+};
+void MainWindow::handleWidthChange(int value){
+    renderArea->setPenSize(value);
+};
+
 
 void MainWindow::handleClearButtonClick(){
 
