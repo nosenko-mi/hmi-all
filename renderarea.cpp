@@ -43,6 +43,8 @@ void RenderArea::setCoordinates(std::map<double,double> coordinates){
         }
 
     }
+    scatter->setMarkerSize(this->pen.widthF()*4);
+    scatter->setColor(this->pen.color());
     this->chart->addSeries(scatter);
 
     series->setPen(this->pen);
