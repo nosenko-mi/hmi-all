@@ -24,22 +24,27 @@ MainWindow::~MainWindow()
 void MainWindow::handleButtonClick(){
     // handle input
     double input = ui->doubleSpinBox->value();
+    QString radioButtonText;
     // calculate
     double y = -1.0;
     if (ui->f1RadioButton->isChecked()){
+        radioButtonText = ui->f1RadioButton->text();
         y = MathUtils::calulateF1(input);
         QString value = QString::number(y);
         ui->f1ResultLabel->setText(value);
     } else {
+        radioButtonText = ui->f2RadioButton->text();
         y = MathUtils::calulateF2(input);
         QString value = QString::number(y);
         ui->f2ResultLabel->setText(value);
     }
     // show result
     char messageBuffer [128];
-    std::sprintf (messageBuffer, "The result is: %.3f", y);
-    QString message = messageBuffer;
-    QMessageBox::information(this, "Information", message); // Replace "this" with your parent widget
+    std::sprintf (messageBuffer, "\nx= %.3f\ny = %.3f", input, y);
+    QString message;
+    message.append(radioButtonText);
+    message.append(messageBuffer);
+    QMessageBox::information(this, "Result", message);
 }
 
 void MainWindow::handleClearButtonClick(){
