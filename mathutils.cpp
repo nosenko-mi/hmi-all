@@ -1,5 +1,8 @@
 #include "mathutils.h"
 #include "cmath"
+#include "point.h"
+#include <algorithm>
+#include <iostream>
 
 MathUtils::MathUtils() {}
 
@@ -31,9 +34,9 @@ double MathUtils::calculateF2(double x){
     return pow((c + 5 * sin(x) +3), 3);
 }
 
-std::map<double, double> MathUtils::calculateRange(double left, double right, int n, double (*func)(double)){
-    std::map<double, double> mapRes;
-    std::vector<double> result = {};
+map<double, double> MathUtils::calculateRange(double left, double right, int n, double (*func)(double)){
+    map<double, double> mapRes;
+    vector<double> result = {};
 
     double step = (right - left) / n;
     double current = left;
@@ -47,9 +50,108 @@ std::map<double, double> MathUtils::calculateRange(double left, double right, in
 
 }
 
+vector<QPointF> MathUtils::calculateRangeToQPoints(double left, double right, int n, double (*func)(double)){
+    vector<QPointF> result;
 
-std::vector<double> MathUtils::calculateRangeF1(double left, double right, int n){
-    std::vector<double> result = {};
+    double step = (right - left) / n;
+    double currentX = left;
+    double currentY;
+    for(int i = 0; i <= n; i++){
+        currentY = func(currentX);
+        result.push_back(QPointF(currentX, currentY));
+        currentX += step;
+    }
+
+    return result;
+
+}
+
+QVector<Point> MathUtils::calculateRangeToPoints(double left, double right, int n, double (*func)(double)){
+    QVector<Point> result;
+
+    double step = (right - left) / n;
+    double currentX = left;
+    double currentY;
+    for(int i = 0; i <= n; i++){
+        currentY = func(currentX);
+        result.append(Point(currentX, currentY));
+        currentX += step;
+    }
+
+    return result;
+
+}
+
+vector<QPointF> MathUtils::scale(map<double, double> coordinates, double min, double max){
+
+    vector<QPointF> points;
+    vector<double> allValues;
+
+    for (const auto&[x, y] : coordinates){
+
+        if(!std::isnan(y) || !std::isinf(y)){
+            allValues.push_back(y);
+        }
+    }
+
+    const auto [localMin, localMax] = std::minmax_element(begin(allValues), end(allValues));
+    std::cout << "min = " << *localMin << ", max = " << *localMax << '\n';
+    double scaledX, scaledY;
+    for (const auto&[x, y] : coordinates){
+        scaledX = ((x - *localMin)/(*localMax - *localMin))*(max - min)+min;
+        scaledY = ((y - *localMin)/(localMax - localMin))*(max - min)+min;
+        points.push_back(QPointF(scaledX, scaledY));
+    }
+
+    return points;
+
+}
+
+QVector<Point> MathUtils::scale(QVector<Point> coordinates, double w, double h){
+
+    QVector<Point> points;
+    vector<double> allValues;
+
+    for (auto c : coordinates){
+        if(!std::isnan(c.getX()) || !std::isinf(c.getY())){
+            allValues.push_back(c.getY());
+        }
+    }
+    const auto [minY, maxY] = std::minmax_element(begin(allValues), end(allValues));
+    allValues.clear();
+
+    for (auto c : coordinates){
+        allValues.push_back(c.getX());
+    }
+    const auto [minX, maxX] = std::minmax_element(begin(allValues), end(allValues));
+
+    double xScale = w / (maxX - minX);
+    double yScale = h / (maxY - minY);
+
+    std::cout << "minY = " << *minY << ", maxY = " << *maxY << '\n';
+    std::cout << "minX = " << *minX << ", maxX = " << *maxX << '\n';
+
+    double scaledX, scaledY;
+
+    for (Point& c : coordinates) {
+        scaledX = (c.getX() - *minX) * xScale;
+        scaledY = h - (c.getY() - *minY) * yScale;
+        points.append(Point(scaledX, scaledY));
+    }
+
+    // for (const auto&[x, y] : coordinates){
+    //     scaledX = ((x - *localMin)/(*localMax - *localMin))*(max - min)+min;
+    //     scaledY = ((y - *localMin)/(localMax - localMin))*(max - min)+min;
+    //     points.push_back(QPointF(scaledX, scaledY));
+    // }
+
+    return points;
+
+}
+
+
+vector<double> MathUtils::calculateRangeF1(double left, double right, int n){
+    vector<double> result = {};
     double step = (right - left) / n;
     double current = left;
     for(int i = 0; i <= n; i++){

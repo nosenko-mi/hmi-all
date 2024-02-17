@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mathutils.cpp \
+    point.cpp \
     renderarea.cpp
 
 HEADERS += \
@@ -22,6 +23,7 @@ HEADERS += \
     inpututils.h \
     mainwindow.h \
     mathutils.h \
+    point.h \
     renderarea.h
 
 FORMS += \

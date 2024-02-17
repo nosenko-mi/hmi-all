@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "RenderArea.h"
+#include "chartwidget.h"
 
 #include <QMainWindow>
 #include <qpushbutton.h>
@@ -31,7 +32,7 @@ private slots:
 
 private:
     RenderArea *renderArea;
-
+    ChartWidget *chartWidget;
     Ui::MainWindow *ui;
     void init();
     void showMessageBox(QString message);

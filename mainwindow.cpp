@@ -25,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::init(){
 
     renderArea = new RenderArea();
+    chartWidget = new ChartWidget();
     ui->plotWidget->setLayout(new QVBoxLayout);
-    ui->plotWidget->layout()->addWidget(renderArea);
+    ui->plotWidget->layout()->addWidget(chartWidget);
 
     ui->penStyleComboBox->addItem(tr("Solid"), static_cast<int>(Qt::SolidLine));
     ui->penStyleComboBox->addItem(tr("Dash"), static_cast<int>(Qt::DashLine));
@@ -64,25 +65,35 @@ void MainWindow::handleButtonClick(){
     int n = ui->valuesAmountSpinBox->value();
 
     // calculate
-    std::map<double, double> result;
+    // std::map<double, double> result;
+    QVector<Point> result;
     if (ui->f1RadioButton->isChecked()){
-        result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF1);
+        // result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF1);
+        result = MathUtils::calculateRangeToPoints(left, right, n, &MathUtils::calculateF1);
     } else {
-        result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF2);
+        // result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF2);
+        result = MathUtils::calculateRangeToPoints(left, right, n, &MathUtils::calculateF2);
     }
 
-    renderArea->setCoordinates(result);
-
+    // renderArea->setCoordinates(result);
+    chartWidget->setPoints(result);
 
     ui->tableWidget->clear();
     ui->tableWidget->setRowCount(2);
     ui->tableWidget->setColumnCount(result.size());
     int i = 0;
-    for (const auto& [point, value] : result){
-        ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
-        ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
+
+    foreach(Point p, result){
+        ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(p.getX())));
+        ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(p.getY())));
         i++;
     }
+
+    // for (const auto& [point, value] : result){
+    //     ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
+    //     ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
+    //     i++;
+    // }
 
 }
 
@@ -93,6 +104,7 @@ void MainWindow::penChanged()
     // QColor color = QColor(ui->penColorComboBox->itemData(ui->penColorComboBox->currentIndex(), IdRole).toInt());
     QColor color = ui->penColorComboBox->itemData(ui->penColorComboBox->currentIndex()).value<QColor>();
     renderArea->setPen(QPen(color, width, style));
+    chartWidget->setPen(QPen(color, width, style));
 }
 
 void MainWindow::handleStyleChange(int index){
