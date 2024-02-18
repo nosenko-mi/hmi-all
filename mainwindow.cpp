@@ -79,13 +79,20 @@ void MainWindow::handleButtonClick(){
     chartWidget->setPoints(result);
 
     ui->tableWidget->clear();
-    ui->tableWidget->setRowCount(2);
+    ui->tableWidget->setRowCount(3);
     ui->tableWidget->setColumnCount(result.size());
     int i = 0;
 
     foreach(Point p, result){
         ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(p.getX())));
         ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(p.getY())));
+        i++;
+    }
+
+    auto scaled = MathUtils::scale(result, chartWidget->width(), chartWidget->height());
+    i = 0;
+    foreach(Point p, scaled){
+        ui->tableWidget->setItem(2, i, new QTableWidgetItem(QString::number(p.getY())));
         i++;
     }
 

@@ -112,12 +112,20 @@ QVector<Point> MathUtils::scale(QVector<Point> coordinates, double w, double h){
     QVector<Point> points;
     vector<double> allValues;
 
+    double minY = 0;
+    double maxY = 0;
     for (auto c : coordinates){
         if(!std::isnan(c.getX()) || !std::isinf(c.getY())){
             allValues.push_back(c.getY());
+            if (c.getY() > maxY){
+                maxY = c.getY();
+            }
+            if (c.getY() < minY){
+                minY = c.getY();
+            }
         }
     }
-    const auto [minY, maxY] = std::minmax_element(begin(allValues), end(allValues));
+    // const auto [minY, maxY] = std::minmax_element(begin(allValues), end(allValues));
     allValues.clear();
 
     for (auto c : coordinates){
@@ -128,14 +136,14 @@ QVector<Point> MathUtils::scale(QVector<Point> coordinates, double w, double h){
     double xScale = w / (maxX - minX);
     double yScale = h / (maxY - minY);
 
-    std::cout << "minY = " << *minY << ", maxY = " << *maxY << '\n';
+    std::cout << "minY = " << minY << ", maxY = " << maxY << '\n';
     std::cout << "minX = " << *minX << ", maxX = " << *maxX << '\n';
 
     double scaledX, scaledY;
 
     for (Point& c : coordinates) {
-        scaledX = (c.getX() - *minX) * xScale;
-        scaledY = h - (c.getY() - *minY) * yScale;
+        scaledX = c.getX(); // (c.getX() - *minX) * xScale;
+        scaledY = (c.getY() - minY) * yScale;
         points.append(Point(scaledX, scaledY));
     }
 
@@ -161,4 +169,19 @@ vector<double> MathUtils::calculateRangeF1(double left, double right, int n){
 
     return result;
     // return calculateRange(left, right, n, &calculateF1);
+}
+
+double MathUtils::getMinY(QVector<Point> points){
+
+    double minY = 0;
+
+    for (auto p : points){
+        if(p.isValid()){
+            if (p.getY() < minY){
+                minY = p.getY();
+            }
+        }
+    }
+
+    return minY;
 }

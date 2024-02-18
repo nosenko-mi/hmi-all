@@ -24,6 +24,8 @@ public:
     static vector<QPointF> scale(map<double, double>, double, double);
     static QVector<Point> scale(QVector<Point>, double, double);
 
+    static double getMinY(QVector<Point>);
+
 private:
     MathUtils();
 };

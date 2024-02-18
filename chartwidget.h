@@ -41,11 +41,14 @@ private:
     double spaceBetweenBars;
     double chartOuterMargin;
 
+    double pointWidth;
+
     void drawEmptyChart(QPainter *painter);
     void drawYAxis(QPainter *painter);
     void drawXAxis(QPainter *painter);
     void drawPoints(QPainter *painter);
     void processNewPoints();
+    double dataPointHeight(double y);
 };
 
 #endif // CHARTWIDGET_H
