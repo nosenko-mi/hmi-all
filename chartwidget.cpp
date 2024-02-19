@@ -24,9 +24,6 @@ void ChartWidget::paintEvent(QPaintEvent *)
     painter.setPen(pen);
     painter.setRenderHint(QPainter::Antialiasing, false);
 
-    // painter.drawPoints(points.data(), points.size());
-    // painter.drawLines(lines);
-
     if (pointsToDraw.isEmpty())
         drawEmptyChart(&painter);
     else {
@@ -34,7 +31,6 @@ void ChartWidget::paintEvent(QPaintEvent *)
         drawYAxis(&painter);
         drawPoints(&painter);
     }
-    // drawPoints(&painter);
 }
 
 void ChartWidget::setPen(const QPen &pen)
@@ -56,7 +52,6 @@ void ChartWidget::processNewPoints(){
     QVector<Point> scaledPoints;
     QVector<QPointF> pointsToDrawVector;
     QVector<QLineF> lines;
-    // scaledPoints = MathUtils::scale(points, 100, 0);
     scaledPoints = points;
     try {
         Point currentPoint;
@@ -163,11 +158,6 @@ void ChartWidget::drawXAxis(QPainter *painter)
 
 void ChartWidget::drawPoints(QPainter *painter)
 {
-    // painter->save();
-    // painter->setPen(this->pen);
-    // painter->drawPoints(pointsToDraw);
-    // painter->drawLines(lines);
-    // painter->restore();
 
     double projectedX = chartOuterMargin + yAxisWidth() + spaceBetweenBars;
 
@@ -176,7 +166,6 @@ void ChartWidget::drawPoints(QPainter *painter)
     double h = height();
     double xHeight = xAxisHeight();
     double scaleH = height() -xHeight - chartOuterMargin - (textHeight/2);
-    // QVector<Point> points = MathUtils::scale(this->points, width(), scaleH);
     QVector<Point> points = MathUtils::scaleY(this->points, chartOuterMargin + (textHeight / 2), scaleH);
     for (int i = 0, k = 1; i < points.size(); i++, k++){
 
@@ -187,13 +176,8 @@ void ChartWidget::drawPoints(QPainter *painter)
 
         projectedX += pointWidth / 2;
         painter->save();
-        // double projectedY = h - xHeight - chartOuterMargin - (textHeight/2) - points[i].getY();
         double projectedY = h - xHeight - - chartOuterMargin - points[i].getY();
-        // double projectedY = h - points[i].getY();
         if (projectedY < 0) projectedY=0;
-        // height() - xAxisHeight() - chartOuterMargin - (textHeight/2);
-        // double dpHeight = dataPointHeight(points[i].getY());
-        // painter->drawPoint(QPointF(point.getX(), point.getX()));
         painter->drawPoint(QPointF(projectedX, projectedY));
 
         if (k < points.size() && points[k].isValid()){
@@ -207,33 +191,6 @@ void ChartWidget::drawPoints(QPainter *painter)
 
         projectedX += (pointWidth / 2) + spaceBetweenBars;
     }
-
-    // foreach(Point point, points) {
-    //     projectedX += pointWidth / 2;
-
-    //     painter->save();
-
-    //     double dpHeight = dataPointHeight(point.getY());
-
-    //     if (point.isValid()){
-    //         painter->drawPoint(QPointF(projectedX - (pointWidth/2), height() - xAxisHeight() - chartOuterMargin - (textHeight/2)));
-
-    //     }
-    //     // QRectF()
-    //     // painter->drawRect(QRectF(projectedX - (pointWidth/2), height() - xAxisHeight() - chartOuterMargin - (textHeight/2),
-    //     //                          pointWidth, -dpHeight));
-
-    //     painter->restore();
-
-    //     projectedX += (pointWidth / 2) + spaceBetweenBars;
-    // }
-
-    // foreach(QPointF point, pointsToDraw) {
-    //     painter->save();
-    //     painter->setPen(this->pen);
-    //     painter->drawPoint(point);
-    //     painter->restore();
-    // }
 }
 
 double ChartWidget::dataPointHeight(double y)
