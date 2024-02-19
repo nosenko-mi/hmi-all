@@ -157,6 +157,41 @@ QVector<Point> MathUtils::scale(QVector<Point> coordinates, double w, double h){
 
 }
 
+// https://stats.stackexchange.com/questions/281162/scale-a-number-between-a-range
+QVector<Point> MathUtils::scaleY(QVector<Point> coordinates, double min, double max){
+    QVector<Point> points;
+    vector<double> allValues;
+
+    double localMin = 0;
+    double localMax = 0;
+    for (auto c : coordinates){
+        if(!std::isnan(c.getX()) || !std::isinf(c.getY())){
+            allValues.push_back(c.getY());
+            if (c.getY() > localMax){
+                localMax = c.getY();
+            }
+            if (c.getY() < localMin){
+                localMin = c.getY();
+            }
+        }
+    }
+
+    double scaledX, scaledY;
+
+    for (Point& c : coordinates) {
+        scaledY = (c.getY() - localMin)/(localMax-localMin)*(max-min)+min;
+        points.append(Point(c.getX(), scaledY));
+    }
+
+    // for (const auto&[x, y] : coordinates){
+    //     scaledX = ((x - *localMin)/(*localMax - *localMin))*(max - min)+min;
+    //     scaledY = ((y - *localMin)/(localMax - localMin))*(max - min)+min;
+    //     points.push_back(QPointF(scaledX, scaledY));
+    // }
+
+    return points;
+}
+
 
 vector<double> MathUtils::calculateRangeF1(double left, double right, int n){
     vector<double> result = {};
