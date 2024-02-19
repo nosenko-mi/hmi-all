@@ -23,6 +23,7 @@ public:
 
     static vector<QPointF> scale(map<double, double>, double, double);
     static QVector<Point> scale(QVector<Point>, double, double);
+    static QVector<Point> scaleY(QVector<Point> coordinates, double min, double max);
 
     static double getMinY(QVector<Point>);
 
