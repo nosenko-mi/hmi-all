@@ -4,16 +4,30 @@
 ChartWidget::ChartWidget(QWidget *parent) :
     QWidget(parent)
 {
-    this->resize(100, 100);
+    // this->resize(256, 400);
     this->pen.setWidth(2);
     this->pen.setBrush(QBrush("red"));
-
-    this->rect().setWidth(100);
-    this->rect().setHeight(100);
 
     spaceBetweenBars = 20;
     chartOuterMargin = 0;
     pointWidth = pen.widthF() * 4;
+}
+
+QSize ChartWidget::sizeHint() const
+{
+
+    double width = 0;
+
+    foreach(Point point, points) {
+        width += pointWidth + spaceBetweenBars;
+    }
+
+    return QSize(width + chartOuterMargin * 2, this->height());
+}
+
+QSize ChartWidget::minimumSizeHint() const
+{
+    return QSize(256, 256);
 }
 
 void ChartWidget::paintEvent(QPaintEvent *)
@@ -22,11 +36,12 @@ void ChartWidget::paintEvent(QPaintEvent *)
     painter.setViewport(this->rect());
     painter.setWindow(this->rect());
     painter.setPen(pen);
-    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (pointsToDraw.isEmpty())
         drawEmptyChart(&painter);
     else {
+        // this->window()->resize(maximumWidth(), maximumHeight());
         drawXAxis(&painter);
         drawYAxis(&painter);
         drawPoints(&painter);

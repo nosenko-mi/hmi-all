@@ -26,8 +26,20 @@ void MainWindow::init(){
 
     renderArea = new RenderArea();
     chartWidget = new ChartWidget();
-    ui->plotWidget->setLayout(new QVBoxLayout);
-    ui->plotWidget->layout()->addWidget(chartWidget);
+    // ui->plotWidget->setLayout(new QVBoxLayout);
+    // ui->plotWidget->layout()->addWidget(chartWidget);
+
+    chartWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    // QWidget* chartContainer = new QWidget();
+    // chartContainer->setLayout(new QVBoxLayout());
+    // chartContainer->layout()->addWidget(chartWidget);
+    // ui->scrollArea->setWidget(chartContainer);
+
+    ui->scrollArea->setWidget(chartWidget);
+
+    ui->scrollArea->setWidgetResizable(true);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     ui->penStyleComboBox->addItem(tr("Solid"), static_cast<int>(Qt::SolidLine));
     ui->penStyleComboBox->addItem(tr("Dash"), static_cast<int>(Qt::DashLine));
@@ -55,7 +67,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::handleButtonClick(){
     // clear previous result
-
+    qDebug() << "chartWidget: " << chartWidget->width() << chartWidget->height() << chartWidget->sizeHint().width() << "\n";
+    qDebug() << "scrollArea: " << ui->scrollArea->width() << ui->scrollArea->height() << "\n";
     // handle input
     if (!isInputCorrect()){
         return;
@@ -77,7 +90,7 @@ void MainWindow::handleButtonClick(){
     chartWidget->setPoints(result);
 
     ui->tableWidget->clear();
-    ui->tableWidget->setRowCount(3);
+    ui->tableWidget->setRowCount(2);
     ui->tableWidget->setColumnCount(result.size());
     int i = 0;
 

@@ -3,7 +3,6 @@
 
 #include "point.h"
 
-#include <iostream>
 #include <QPen>
 #include <QWidget>
 #include <QPainterPath>
@@ -18,6 +17,8 @@ class ChartWidget : public QWidget
 {
 public:
     ChartWidget(QWidget *parent = 0);
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
     void setPoints(QVector<Point> points);
 
 public slots:
