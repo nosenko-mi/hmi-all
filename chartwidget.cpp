@@ -175,7 +175,8 @@ void ChartWidget::drawPoints(QPainter *painter)
     double h = height();
     double xHeight = xAxisHeight();
     double scaleH = height() -xHeight - chartOuterMargin - (textHeight/2);
-    QVector<Point> points = MathUtils::scale(this->points, width(), scaleH);
+    // QVector<Point> points = MathUtils::scale(this->points, width(), scaleH);
+    QVector<Point> points = MathUtils::scaleY(this->points, chartOuterMargin + (textHeight / 2), scaleH);
     for (int i = 0, k = 1; i < points.size(); i++, k++){
 
         if (!points[i].isValid()){
