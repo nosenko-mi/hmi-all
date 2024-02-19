@@ -110,6 +110,7 @@ void ChartWidget::drawYAxis(QPainter *painter)
 
     double yAxisX = chartOuterMargin + textWidth + 5;
     double yAxisY = chartOuterMargin + (textHeight / 2);
+    // double yAxisY = 0;
     double yAxisHeight = height() - yAxisY - xAxisHeight();
 
     painter->save();
@@ -194,6 +195,13 @@ void ChartWidget::drawPoints(QPainter *painter)
         // double dpHeight = dataPointHeight(points[i].getY());
         // painter->drawPoint(QPointF(point.getX(), point.getX()));
         painter->drawPoint(QPointF(projectedX, projectedY));
+
+        if (k < points.size() && points[k].isValid()){
+            double nextProjectedX = projectedX;
+            nextProjectedX += pointWidth + spaceBetweenBars;
+            double newxProjectedY = h - xHeight - - chartOuterMargin - points[k].getY();
+            painter->drawLine(QPointF(projectedX, projectedY), QPointF(nextProjectedX, newxProjectedY));
+        }
 
         painter->restore();
 
