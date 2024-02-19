@@ -65,10 +65,8 @@ void MainWindow::handleButtonClick(){
     int n = ui->valuesAmountSpinBox->value();
 
     // calculate
-    // std::map<double, double> result;
     QVector<Point> result;
     if (ui->f1RadioButton->isChecked()){
-        // result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF1);
         result = MathUtils::calculateRangeToPoints(left, right, n, &MathUtils::calculateF1);
     } else {
         // result = MathUtils::calculateRange(left, right, n, &MathUtils::calculateF2);
@@ -88,20 +86,6 @@ void MainWindow::handleButtonClick(){
         ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(p.getY())));
         i++;
     }
-
-    auto scaled = MathUtils::scale(result, chartWidget->width(), chartWidget->height());
-    i = 0;
-    foreach(Point p, scaled){
-        ui->tableWidget->setItem(2, i, new QTableWidgetItem(QString::number(p.getY())));
-        i++;
-    }
-
-    // for (const auto& [point, value] : result){
-    //     ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(point)));
-    //     ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(value)));
-    //     i++;
-    // }
-
 }
 
 void MainWindow::penChanged()
