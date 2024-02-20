@@ -30,6 +30,10 @@ private slots:
     void handleColorChange(int index);
     void handleWidthChange(int value);
     void penChanged();
+
+    void open();
+    void save();
+    void print();
     // void changePrecision(int decimals);
 
 private:
