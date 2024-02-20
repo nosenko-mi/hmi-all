@@ -3,8 +3,10 @@
 
 #include "RenderArea.h"
 #include "chartwidget.h"
+#include "tablewindow.h"
 
 #include <QMainWindow>
+#include <QTableWidget>
 #include <qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +35,8 @@ private slots:
 private:
     RenderArea *renderArea;
     ChartWidget *chartWidget;
+    QTableWidget *resultTable;
+    TableWindow *tableWindow;
     Ui::MainWindow *ui;
     void init();
     void showMessageBox(QString message);

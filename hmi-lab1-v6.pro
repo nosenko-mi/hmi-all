@@ -16,7 +16,8 @@ SOURCES += \
     mainwindow.cpp \
     mathutils.cpp \
     point.cpp \
-    renderarea.cpp
+    renderarea.cpp \
+    tablewindow.cpp
 
 HEADERS += \
     chartwidget.h \
@@ -24,7 +25,8 @@ HEADERS += \
     mainwindow.h \
     mathutils.h \
     point.h \
-    renderarea.h
+    renderarea.h \
+    tablewindow.h
 
 FORMS += \
     mainwindow.ui

@@ -4,8 +4,10 @@
 #include "ui_mainwindow.h"
 
 #include <MathUtils.h>
+#include <QMdiSubWindow>
 #include <QMessageBox>
 #include <QPainter>
+#include <QTableWidget>
 
 const int IdRole = Qt::UserRole;
 MainWindow::MainWindow(QWidget *parent)
@@ -31,15 +33,40 @@ void MainWindow::init(){
 
     chartWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    // QWidget* chartContainer = new QWidget();
+    QScrollArea* chartContainer = new QScrollArea();
+    chartContainer->setLayout(new QVBoxLayout());
+    chartContainer->setWidget(chartWidget);
+    chartContainer->setWidgetResizable(true);
+    chartContainer->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    // QMdiSubWindow *chartSubWindow = new QMdiSubWindow(chartContainer);
+    QMdiSubWindow *chartSubWindow = ui->mdiArea->addSubWindow(chartContainer);
+    chartSubWindow->setWindowTitle("Chart Window");
+    // chartSubWindow->setParent(ui->mdiArea);
+    // ui->mdiArea->addSubWindow(chartSubWindow);
+    // ui->mdiArea->setWindowTitle("Chart Window");
+    // ui->mdiArea->show();
+
+    // resultTable = new QTableWidget();
+    // QMdiSubWindow *tableSubWindow = ui->mdiArea->addSubWindow(resultTable);
+    // tableSubWindow->setWindowTitle("Table Window");
+    // ui->mdiArea->show();
+
+    tableWindow = new TableWindow();
+    // tableWindow->setWindowTitle("Table Window");
+    QMdiSubWindow *tableSubWindow = ui->mdiArea->addSubWindow(tableWindow);
+    tableSubWindow->setWindowTitle("Table Window");
+    ui->mdiArea->show();
+
+    // QScrollArea* chartContainer = new QScrollArea();
     // chartContainer->setLayout(new QVBoxLayout());
     // chartContainer->layout()->addWidget(chartWidget);
-    // ui->scrollArea->setWidget(chartContainer);
+    // ui->mdiArea->addSubWindow(chartContainer);
+    // ui->mdiArea->setWindowTitle("Chart Window");
+    // ui->mdiArea->show();
 
-    ui->scrollArea->setWidget(chartWidget);
-
-    ui->scrollArea->setWidgetResizable(true);
-    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    // ui->scrollArea->setWidget(chartWidget);
+    // ui->scrollArea->setWidgetResizable(true);
+    // ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     ui->penStyleComboBox->addItem(tr("Solid"), static_cast<int>(Qt::SolidLine));
     ui->penStyleComboBox->addItem(tr("Dash"), static_cast<int>(Qt::DashLine));
@@ -68,7 +95,7 @@ MainWindow::~MainWindow()
 void MainWindow::handleButtonClick(){
     // clear previous result
     qDebug() << "chartWidget: " << chartWidget->width() << chartWidget->height() << chartWidget->sizeHint().width() << "\n";
-    qDebug() << "scrollArea: " << ui->scrollArea->width() << ui->scrollArea->height() << "\n";
+    // qDebug() << "scrollArea: " << ui->scrollArea->width() << ui->scrollArea->height() << "\n";
     // handle input
     if (!isInputCorrect()){
         return;
@@ -89,16 +116,18 @@ void MainWindow::handleButtonClick(){
     // renderArea->setCoordinates(result);
     chartWidget->setPoints(result);
 
-    ui->tableWidget->clear();
-    ui->tableWidget->setRowCount(2);
-    ui->tableWidget->setColumnCount(result.size());
-    int i = 0;
+    tableWindow->setData(result);
 
-    foreach(Point p, result){
-        ui->tableWidget->setItem(0, i, new QTableWidgetItem(QString::number(p.getX())));
-        ui->tableWidget->setItem(1, i, new QTableWidgetItem(QString::number(p.getY())));
-        i++;
-    }
+    // resultTable->clear();
+    // resultTable->setRowCount(2);
+    // resultTable->setColumnCount(result.size());
+    // int i = 0;
+
+    // foreach(Point p, result){
+    //     resultTable->setItem(0, i, new QTableWidgetItem(QString::number(p.getX())));
+    //     resultTable->setItem(1, i, new QTableWidgetItem(QString::number(p.getY())));
+    //     i++;
+    // }
 }
 
 void MainWindow::penChanged()
