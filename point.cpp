@@ -6,6 +6,28 @@ Point::Point()
     this->y = 0;
 }
 
+bool Point::serialize(std::ofstream& stream) const {
+    if (std::isnan(y) || std::isinf(y)){
+        stream << x << " " << "?" << std::endl;
+        return stream.good();
+    }
+    stream << x << " " << y << std::endl;
+    return stream.good();
+}
+
+bool Point::deserialize(std::ifstream& stream, Point& point) {
+    stream >> point.x;
+    std::string yStr;
+    stream >> yStr;
+    if (yStr == "?") {
+        return false; // Deserialization failed if y is not "?"
+        point.y = std::numeric_limits<double>::quiet_NaN(); // Set y to NaN
+    } else {
+        point.y = std::stod(yStr);
+    }
+    return stream.good();
+}
+
 Point::Point(double x, double y)
 {
     this->x = x;

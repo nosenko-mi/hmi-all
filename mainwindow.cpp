@@ -1,9 +1,11 @@
 #include "chartwidget.h"
+#include "fileutils.h"
 #include "mainwindow.h"
 #include "renderarea.h"
 #include "ui_mainwindow.h"
 
 #include <MathUtils.h>
+#include <QFileDialog>
 #include <QMdiSubWindow>
 #include <QMessageBox>
 #include <QPainter>
@@ -117,6 +119,7 @@ void MainWindow::handleButtonClick(){
     chartWidget->setPoints(result);
 
     tableWindow->setData(result);
+    points = &result;
 
     // resultTable->clear();
     // resultTable->setRowCount(2);
@@ -149,6 +152,7 @@ void MainWindow::handleStyleChange(int index){
     }
 
 };
+
 void MainWindow::handleColorChange(int index){
     int selectedIndex = ui->penColorComboBox->currentIndex();
     if (selectedIndex != -1) {
@@ -161,6 +165,18 @@ void MainWindow::handleColorChange(int index){
 void MainWindow::handleWidthChange(int value){
     renderArea->setPenSize(value);
 };
+
+void MainWindow::open(){
+
+}
+
+void MainWindow::save(){
+
+}
+
+void MainWindow::print(){
+
+}
 
 
 void MainWindow::handleClearButtonClick(){
@@ -194,3 +210,34 @@ bool MainWindow::isInputCorrect(){
     }
     return true;
 }
+
+void MainWindow::on_actionOpen_triggered()
+{
+    qDebug() << "open";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Text Files (*.txt)"));
+
+    // parse document
+
+    // display table
+
+    // draw chart
+}
+
+
+void MainWindow::on_actionSave_triggered()
+{
+    qDebug() << "save";
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("Text Files (*.txt)"));
+    int result = FileUtils::savePointsToFile(fileName, points);
+    if (result == -1){
+        // show error
+    }
+}
+
+
+void MainWindow::on_actionPrint_triggered()
+{
+    qDebug() << "print";
+}
+

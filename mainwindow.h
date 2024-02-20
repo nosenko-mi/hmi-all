@@ -4,6 +4,7 @@
 #include "RenderArea.h"
 #include "chartwidget.h"
 #include "tablewindow.h"
+#include <fstream>
 
 #include <QMainWindow>
 #include <QTableWidget>
@@ -36,12 +37,19 @@ private slots:
     void print();
     // void changePrecision(int decimals);
 
+    void on_actionOpen_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionPrint_triggered();
+
 private:
     RenderArea *renderArea;
     ChartWidget *chartWidget;
     QTableWidget *resultTable;
     TableWindow *tableWindow;
     Ui::MainWindow *ui;
+    QVector<Point> *points;
     void init();
     void showMessageBox(QString message);
     bool isInputCorrect();

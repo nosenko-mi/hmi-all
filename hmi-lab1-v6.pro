@@ -11,20 +11,24 @@ CONFIG += c++17
 
 SOURCES += \
     chartwidget.cpp \
+    fileutils.cpp \
     inpututils.cpp \
     main.cpp \
     mainwindow.cpp \
     mathutils.cpp \
     point.cpp \
+    pointsserializer.cpp \
     renderarea.cpp \
     tablewindow.cpp
 
 HEADERS += \
     chartwidget.h \
+    fileutils.h \
     inpututils.h \
     mainwindow.h \
     mathutils.h \
     point.h \
+    pointsserializer.h \
     renderarea.h \
     tablewindow.h
 
