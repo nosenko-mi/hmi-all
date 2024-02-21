@@ -49,7 +49,7 @@ private:
     QTableWidget *resultTable;
     TableWindow *tableWindow;
     Ui::MainWindow *ui;
-    QVector<Point> *points;
+    QVector<Point> points;
     void init();
     void showMessageBox(QString message);
     bool isInputCorrect();

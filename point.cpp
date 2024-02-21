@@ -1,4 +1,5 @@
 #include "point.h"
+#include "qdebug.h"
 
 Point::Point()
 {
@@ -6,12 +7,32 @@ Point::Point()
     this->y = 0;
 }
 
+
+Point::Point(QString s)
+{
+    QStringList list = s.split(u' ', Qt::SkipEmptyParts);
+    bool okX;
+    bool okY;
+    double x = list[0].toDouble(&okX);
+    double y = list[1].toDouble(&okY);
+
+    if (!okY){
+        y = std::numeric_limits<double>::quiet_NaN();
+    }
+    this->x = x;
+    this->y = y;
+}
+
+
 bool Point::serialize(std::ofstream& stream) const {
+    qDebug() << "Point::serialize";
     if (std::isnan(y) || std::isinf(y)){
         stream << x << " " << "?" << std::endl;
+        qDebug() << "Point::serialize end 1";
         return stream.good();
     }
     stream << x << " " << y << std::endl;
+    qDebug() << "Point::serialize end 2";
     return stream.good();
 }
 

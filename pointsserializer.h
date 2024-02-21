@@ -2,18 +2,22 @@
 #define POINTSSERIALIZER_H
 
 #include "point.h"
+#include "qdebug.h"
 
 
 class PointsSerializer
 {
 public:
     static bool serializePoints(const QVector<Point>& points, std::ofstream& stream) {
+
+        qDebug() << "PointsSerializer::serializePoints";
         stream << points.size() << std::endl; // Write vector size
         for (const Point& point : points) {
             if (!point.serialize(stream)) {
                 return false;
             }
         }
+        qDebug() << "PointsSerializer::serializePoints end";
         return stream.good();
     }
 

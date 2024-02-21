@@ -9,6 +9,9 @@
 #include <QMdiSubWindow>
 #include <QMessageBox>
 #include <QPainter>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPrinter>
 #include <QTableWidget>
 
 const int IdRole = Qt::UserRole;
@@ -119,7 +122,7 @@ void MainWindow::handleButtonClick(){
     chartWidget->setPoints(result);
 
     tableWindow->setData(result);
-    points = &result;
+    points = result;
 
     // resultTable->clear();
     // resultTable->setRowCount(2);
@@ -215,12 +218,15 @@ void MainWindow::on_actionOpen_triggered()
 {
     qDebug() << "open";
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Text Files (*.txt)"));
+    points = FileUtils::openPointsFromFile(fileName);
 
     // parse document
 
     // display table
-
+    tableWindow->setData(points);
     // draw chart
+    chartWidget->setPoints(points);
+
 }
 
 
@@ -239,5 +245,14 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionPrint_triggered()
 {
     qDebug() << "print";
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    // printer.setPaperSize(QPrinter::A4);
+
+    QPrintDialog printDialog(&printer);
+    if (printDialog.exec() == QDialog::Accepted) {
+        // print ...
+    }
 }
 
