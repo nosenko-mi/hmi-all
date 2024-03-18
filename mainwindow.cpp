@@ -13,6 +13,7 @@
 #include <QPrinter>
 #include <QPrinter>
 #include <QTableWidget>
+#include <QTextTableCell>
 
 const int IdRole = Qt::UserRole;
 MainWindow::MainWindow(QWidget *parent)
@@ -247,12 +248,40 @@ void MainWindow::on_actionPrint_triggered()
     qDebug() << "print";
 
     QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFileName("print.pdf");
+
+    QTextDocument* doc = tableWindow->toQTextDocument();
+
+    //Print to PDF
     printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName("testqtextdoc.pdf");
+    doc->print(&printer);
+
+
+    // printer.setOutputFormat(QPrinter::PdfFormat);
     // printer.setPaperSize(QPrinter::A4);
 
-    QPrintDialog printDialog(&printer);
-    if (printDialog.exec() == QDialog::Accepted) {
-        // print ...
-    }
+    // QPrintDialog printDialog(&printer, this);
+    // if (printDialog.exec() == QDialog::Accepted) {
+    //     // print ...
+    //     qDebug() << "accepted";
+    // }
+
+    // QPainter painter;
+    // painter.begin(&printer);
+    // const auto pageLayout = printer.pageLayout();
+    // const auto pageRect = pageLayout.paintRectPixels(printer.resolution());
+    // const auto paperRect = pageLayout.fullRectPixels(printer.resolution());
+    // double xscale = pageRect.width() / double(chartWidget->width());
+    // double yscale = pageRect.height() / double(chartWidget->height());
+    // double scale = qMin(xscale, yscale);
+    // painter.translate(pageRect.x() + paperRect.width() / 2.,
+    //                   pageRect.y() + paperRect.height() / 2.);
+    // painter.scale(scale, scale);
+    // painter.translate(-chartWidget->width() / 2., -chartWidget->height() / 2.);
+
+    // chartWidget->render(&painter);
+
+
 }
 
